@@ -1,0 +1,77 @@
+{
+  "name": "kikstart-graphql-client",
+  "version": "0.0.0-development",
+  "description": "Small NodeJS Wrapper around apollo-client that provides easy access to running queries, mutations and subscriptions.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "server": "ts-node --watch src ./src/server/message-bus-server.ts",
+    "lint": "eslint './src/**/*.{js,ts,tsx}'",
+    "test": "true # jest",
+    "test:watch": "jest --watchAll",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "npm link && nodemon",
+    "semantic-release": "semantic-release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/beeman/kikstart-graphql-client.git"
+  },
+  "keywords": [
+    "Hello",
+    "Greeter"
+  ],
+  "author": {
+    "name": "Bram Borggreve",
+    "email": "borggreve@gmail.com"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beeman/kikstart-graphql-client/issues"
+  },
+  "homepage": "https://github.com/beeman/kikstart-graphql-client#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm test",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-push": "npm run lint && npm test"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@types/jest": "^24.0.23",
+    "@types/node": "^12.12.11",
+    "@typescript-eslint/eslint-plugin": "^2.8.0",
+    "@typescript-eslint/parser": "^2.8.0",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "graphql": "^14.5.8",
+    "graphql-yoga": "^1.18.3",
+    "husky": "^3.1.0",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.4",
+    "prettier": "^1.19.1",
+    "semantic-release": "^15.13.31",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.7.2"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "dependencies": {
+    "apollo-cache-inmemory": "^1.6.3",
+    "apollo-client": "^2.6.4",
+    "apollo-link": "^1.2.13",
+    "apollo-link-context": "^1.0.19",
+    "apollo-link-error": "^1.1.12",
+    "apollo-link-http": "^1.5.16",
+    "apollo-link-ws": "^1.0.19",
+    "apollo-utilities": "^1.3.2",
+    "graphql-tag": "^2.10.1",
+    "node-fetch": "^2.6.0",
+    "subscriptions-transport-ws": "^0.9.16"
+  }
+}
