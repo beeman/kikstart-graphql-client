@@ -15,10 +15,55 @@ Small NodeJS Wrapper around apollo-client that provides easy access to running q
 ![npm collaborators](https://img.shields.io/npm/collaborators/kikstart-graphql-client.svg)
 
 
-```
-yarn add kikstart-graphql-client
+## Usage
 
+Install dependency:
+
+```shell script
+yarn add kikstart-graphql-client graphql
 ```
+
+Import `GraphQLClient`:
+
+```typescript
+import { GraphQLClient } from 'kikstart-graphql-client';
+```
+
+Create instance:
+
+```typescript
+const client = new GraphQLClient({
+  uri: 'http://localhost:4000/graphql',
+  wsUri: 'ws://localhost:4000/graphql',
+})
+```
+
+Run Query:
+
+```typescript
+async getStatus() {
+  const { data, error } = await this.client.runQuery(`
+    query { status }
+  `);
+  if (error) {
+    throw error
+  }
+  return data.status
+}
+```
+
+Run Subscription:
+
+```typescript
+client.runSubscription(query)
+   .subscribe({
+      next: res => console.log(JSON.stringify(res.data.statusSubscription, null, 2)),
+      error: error => console.error(error),
+      complete: () => console.log('done'),
+   })
+}
+```
+
 
 
 ## Credits
