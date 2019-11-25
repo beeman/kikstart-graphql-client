@@ -103,7 +103,7 @@ export const createClient = (
 
   if (log)
     log.log(
-      `Connecting to ${uri}${wsUri ? ` with subscriptions at ${wsUri}` : ''}`,
+      `[GraphQLClient] Connecting to ${uri} / ${wsUri}`,
       ...(headers && Object.keys(headers).length ? [headers] : []),
     );
 

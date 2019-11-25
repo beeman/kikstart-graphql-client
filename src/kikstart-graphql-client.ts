@@ -51,6 +51,12 @@ export class GraphQLClient {
   }
 
   disconnect() {
+    if (this.config.log) {
+      this.config.log.log(
+        `[GraphQLClient] Disconnecting from ${this.config.uri} / ${this.config.wsUri}`,
+      );
+    }
+
     this.wsClient.close();
   }
 }
