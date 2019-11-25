@@ -12,11 +12,7 @@ on:
 jobs:
   lint-and-test:
     name: Test on node ${{ matrix.node-version }} and ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [10, 12]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ubuntu-latest
     services:
       intercom:
         image: kikstart/graphql-intercom
