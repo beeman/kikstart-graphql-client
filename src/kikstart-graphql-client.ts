@@ -7,10 +7,10 @@ import {
 } from './kikstart-apollo-client';
 
 export class GraphQLClient {
-  private client: ApolloClient<any>;
+  public apollo: ApolloClient<any>;
 
   constructor(private config: KikstartGraphQLClientConfig) {
-    this.client = createClient(this.config);
+    this.apollo = createClient(this.config);
   }
 
   query(query) {
@@ -18,26 +18,14 @@ export class GraphQLClient {
   }
 
   async runQuery(query, variables = {}) {
-    const { error, data } = await this.client
-      .query({ query: this.query(query), variables })
-      .catch((err) => {
-        return err;
-      });
-
-    return { error, data };
+    return this.apollo.query({ query: this.query(query), variables });
   }
 
   async runMutation(mutation, variables = {}) {
-    const { error, data } = await this.client
-      .mutate({ mutation: this.query(mutation), variables })
-      .catch((err) => {
-        return err;
-      });
-
-    return { error, data };
+    return this.apollo.mutate({ mutation: this.query(mutation), variables });
   }
 
   runSubscription(query, variables = {}) {
-    return this.client.subscribe({ query: this.query(query), variables });
+    return this.apollo.subscribe({ query: this.query(query), variables });
   }
 }
