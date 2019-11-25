@@ -5,9 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "server": "ts-node --watch src ./src/server/message-bus-server.ts",
+    "server": "npx graphql-intercom",
     "lint": "eslint './src/**/*.{js,ts,tsx}'",
-    "test": "true # jest --detectOpenHandles",
+    "test": "jest --detectOpenHandles",
     "test:watch": "jest --watchAll",
     "build": "tsc",
     "watch": "tsc -w",

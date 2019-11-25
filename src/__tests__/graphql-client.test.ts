@@ -1,6 +1,6 @@
 import { GraphQLClient, KikstartGraphQLClientConfig } from '..';
-const uri = 'http://localhost:4567';
-const wsUri = 'ws://localhost:4567';
+const uri = process.env.GRAPHQL_CLIENT_URI || 'http://localhost:4567';
+const wsUri = process.env.GRAPHQL_CLIENT_WSURI || 'ws://localhost:4567';
 
 const queries = {
   uptimeQuery: `
