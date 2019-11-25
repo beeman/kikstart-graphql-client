@@ -13,6 +13,8 @@ jobs:
   lint-and-test:
     name: Test on node ${{ matrix.node-version }} and ${{ matrix.os }}
     runs-on: ubuntu-latest
+    container:
+      image:  node:12-alpine
     services:
       intercom:
         image: kikstart/graphql-intercom

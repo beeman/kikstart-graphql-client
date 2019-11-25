@@ -8,6 +8,8 @@ on:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    container:
+      image:  node:12-alpine
     services:
       intercom:
         image: kikstart/graphql-intercom
@@ -24,8 +26,8 @@ jobs:
       - run: yarn lint
       - run: yarn test
         env:
-          GRAPHQL_CLIENT_URI: http://localhost:${{ job.services.intercom.port[4567] }}
-          GRAPHQL_CLIENT_WSURI: ws://localhost:${{ job.services.intercom.port[4567] }}
+          GRAPHQL_CLIENT_URI: http://intercom:${{ job.services.intercom.port[4567] }}
+          GRAPHQL_CLIENT_WSURI: ws://intercom:${{ job.services.intercom.port[4567] }}
 
   # Publishing to gpr automatically published to npm too
   build-and-publish-gpr:
