@@ -3367,6 +3367,13 @@ graphql-import@^0.7.0:
     lodash "^4.17.4"
     resolve-from "^4.0.0"
 
+graphql-intercom@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-intercom/-/graphql-intercom-1.0.0.tgz#182a2a60402b0af931a3c2a0d5f4157178d33806"
+  integrity sha512-o6SsguCn+5jDN076hglzV+FSO0Wce2u48vD5bPLd+aCajgE3nZhY/osf8opYss31zsxGwYy3B+AlgsV4Jt9Z4A==
+  dependencies:
+    graphql-yoga "^1.18.3"
+
 graphql-middleware@4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-4.0.1.tgz#8c627b22cc046a47e9474a813cf9e0bd50fa0c4b"

@@ -1,4 +1,5 @@
 import { GraphQLClient, KikstartGraphQLClientConfig } from '..';
+import {} from 'graphql-intercom';
 const uri = process.env.GRAPHQL_CLIENT_URI || 'http://localhost:4567';
 const wsUri = process.env.GRAPHQL_CLIENT_WSURI || 'ws://localhost:4567';
 
@@ -33,6 +34,8 @@ const getClient = (config?: KikstartGraphQLClientConfig) => {
     ...config,
   });
 };
+
+beforeAll(() => {});
 
 test('GraphQLClient', () => {
   const client = getClient();
