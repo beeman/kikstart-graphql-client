@@ -1,4 +1,4 @@
-import ApolloClient from 'apollo-client';
+import ApolloClient, { ApolloQueryResult } from 'apollo-client';
 import gql from 'graphql-tag';
 
 import {
@@ -9,7 +9,7 @@ import {
 import { WebSocketLink } from 'apollo-link-ws';
 import { createHttpLink } from 'apollo-link-http';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
-import { ApolloLink } from 'apollo-link';
+import { ApolloLink, FetchResult, Observable } from 'apollo-link';
 import ws from 'ws';
 import fetch from 'node-fetch';
 import { InMemoryCache } from 'apollo-cache-inmemory';
@@ -20,7 +20,7 @@ export class GraphQLClient {
   public wsClient: SubscriptionClient;
   public wsLink: WebSocketLink;
 
-  constructor(private config: KikstartGraphQLClientConfig) {
+  constructor(public config: KikstartGraphQLClientConfig) {
     this.httpLink = createHttpLink({ uri: config.uri, fetch });
     this.wsClient = new SubscriptionClient(
       config.wsUri,
@@ -34,23 +34,26 @@ export class GraphQLClient {
     this.apollo = createClient(this.httpLink, this.wsLink, this.config);
   }
 
-  query(query) {
+  private query(query) {
     return typeof query === 'string' ? gql(query) : query;
   }
 
-  async runQuery(query, variables = {}) {
+  public async runQuery(
+    query,
+    variables = {},
+  ): Promise<ApolloQueryResult<any>> {
     return this.apollo.query({ query: this.query(query), variables });
   }
 
-  async runMutation(mutation, variables = {}) {
+  public async runMutation(mutation, variables = {}): Promise<FetchResult> {
     return this.apollo.mutate({ mutation: this.query(mutation), variables });
   }
 
-  runSubscription(query, variables = {}) {
+  public runSubscription(query, variables = {}): Observable<FetchResult<any>> {
     return this.apollo.subscribe({ query: this.query(query), variables });
   }
 
-  disconnect() {
+  public disconnect() {
     if (this.config.log) {
       this.config.log.log(
         `[GraphQLClient] Disconnecting from ${this.config.uri} / ${this.config.wsUri}`,
