@@ -37,18 +37,21 @@ const getClient = (config?: KikstartGraphQLClientConfig) => {
 test('GraphQLClient', () => {
   const client = getClient();
   expect(client).toBeDefined();
+  client.disconnect();
 });
 
 test('GraphQLClient query', async () => {
   const client = getClient();
   const { data } = await client.runQuery(queries.uptimeQuery);
   expect(data.uptime).toBeDefined();
+  client.disconnect();
 });
 
 test('GraphQLClient mutation', async () => {
   const client = getClient();
   const { data } = await client.runMutation(queries.publishMutation);
   expect(data.publish).toBeDefined();
+  client.disconnect();
 });
 
 test('GraphQLClient subscription', async () => {
@@ -58,6 +61,7 @@ test('GraphQLClient subscription', async () => {
   });
   const pub = await client.runMutation(queries.publishMutation);
   expect(pub.data.publish).toBeDefined();
+  client.disconnect();
 });
 
 test('GraphQLClient all transport over webSocket', async () => {
@@ -72,4 +76,5 @@ test('GraphQLClient all transport over webSocket', async () => {
   });
   const pub = await client.runMutation(queries.publishMutation);
   expect(pub.data.publish).toBeDefined();
+  client.disconnect();
 });

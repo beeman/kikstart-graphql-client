@@ -6,11 +6,32 @@ import {
   KikstartGraphQLClientConfig,
 } from './kikstart-apollo-client';
 
+import { WebSocketLink } from 'apollo-link-ws';
+import { createHttpLink } from 'apollo-link-http';
+import { SubscriptionClient } from 'subscriptions-transport-ws';
+import { ApolloLink } from 'apollo-link';
+import ws from 'ws';
+import fetch from 'node-fetch';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+
 export class GraphQLClient {
-  public apollo: ApolloClient<any>;
+  public apollo: ApolloClient<InMemoryCache | any>;
+  public httpLink: ApolloLink;
+  public wsClient: SubscriptionClient;
+  public wsLink: WebSocketLink;
 
   constructor(private config: KikstartGraphQLClientConfig) {
-    this.apollo = createClient(this.config);
+    this.httpLink = createHttpLink({ uri: config.uri, fetch });
+    this.wsClient = new SubscriptionClient(
+      config.wsUri,
+      {
+        ...config.wsOptions,
+        reconnect: true,
+      },
+      ws,
+    );
+    this.wsLink = new WebSocketLink(this.wsClient);
+    this.apollo = createClient(this.httpLink, this.wsLink, this.config);
   }
 
   query(query) {
@@ -27,5 +48,9 @@ export class GraphQLClient {
 
   runSubscription(query, variables = {}) {
     return this.apollo.subscribe({ query: this.query(query), variables });
+  }
+
+  disconnect() {
+    this.wsClient.close();
   }
 }

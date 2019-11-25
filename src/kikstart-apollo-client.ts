@@ -2,15 +2,10 @@
 import { inspect } from 'util';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
-import { WebSocketLink } from 'apollo-link-ws';
 import { onError } from 'apollo-link-error';
 import { setContext } from 'apollo-link-context';
-import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { getMainDefinition } from 'apollo-utilities';
-import { SubscriptionClient } from 'subscriptions-transport-ws';
-import ws from 'ws';
-import fetch from 'node-fetch';
 
 /* istanbul ignore next */
 const getErrorMessage = ({ graphQLErrors, networkError, operation }) =>
@@ -26,26 +21,25 @@ const getErrorMessage = ({ graphQLErrors, networkError, operation }) =>
     operation && operation.variables ? `(${inspect(operation.variables)})` : ''
   }`;
 
-export interface KikstartGraphQLClientConfig {
+export interface KikstartGraphQLLinkConfig {
+  mutationLink?: 'http' | 'ws';
+  queryLink?: 'http' | 'ws';
+  subscriptionLink?: 'ws';
+}
+export interface KikstartGraphQLClientConfig extends KikstartGraphQLLinkConfig {
   uri: string;
   wsUri: string;
   wsOptions?: any;
   cache?: any;
   headers?: any;
   log?: any;
-  mutationLink?: 'http' | 'ws';
-  queryLink?: 'http' | 'ws';
-  subscriptionLink?: 'ws';
 }
 
-export const createLink = ({
-  uri,
-  wsUri,
-  wsOptions,
-  mutationLink,
-  queryLink,
-  subscriptionLink,
-}: KikstartGraphQLClientConfig) => {
+export const createLink = (
+  httpLink,
+  wsLink,
+  { mutationLink, queryLink, subscriptionLink }: KikstartGraphQLLinkConfig,
+) => {
   // Define which operations use webSocket
   const wsOperations: string[] = [];
 
@@ -61,19 +55,6 @@ export const createLink = ({
     wsOperations.push('subscription');
   }
 
-  // Create transport link
-  const httpLink = createHttpLink({ uri, fetch });
-
-  const wsClient = new SubscriptionClient(
-    wsUri,
-    {
-      ...wsOptions,
-      reconnect: true,
-    },
-    ws,
-  );
-  const wsLink = new WebSocketLink(wsClient);
-
   return wsOperations.length
     ? ApolloLink.split(
         ({ query }) =>
@@ -87,21 +68,21 @@ export const createLink = ({
     : httpLink;
 };
 
-export const createClient = ({
-  uri,
-  wsUri,
-  wsOptions,
-  mutationLink = 'http',
-  queryLink = 'http',
-  subscriptionLink = 'ws',
-  cache,
-  headers,
-  log,
-}: KikstartGraphQLClientConfig) => {
-  const transportLink = createLink({
+export const createClient = (
+  httpLink,
+  wsLink,
+  {
     uri,
     wsUri,
-    wsOptions,
+    mutationLink = 'http',
+    queryLink = 'http',
+    subscriptionLink = 'ws',
+    cache,
+    headers,
+    log,
+  }: KikstartGraphQLClientConfig,
+) => {
+  const transportLink = createLink(httpLink, wsLink, {
     mutationLink,
     queryLink,
     subscriptionLink,
