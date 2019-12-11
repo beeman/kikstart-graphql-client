@@ -12,11 +12,14 @@ on:
 jobs:
   lint-and-test:
     name: Test on node ${{ matrix.node-version }} and ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [10, 12]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ubuntu-latest
+    container:
+      image:  node:12-alpine
+    services:
+      intercom:
+        image: kikstart/graphql-intercom
+        ports:
+          - 4567/tcp
 
     steps:
       - uses: actions/checkout@v1
@@ -29,3 +32,6 @@ jobs:
       - run: npm run lint
       - run: npm run build
       - run: npm test
+        env:
+          GRAPHQL_CLIENT_URI: http://localhost:${{ job.services.intercom.port[4567] }}
+          GRAPHQL_CLIENT_WSURI: ws://localhost:${{ job.services.intercom.port[4567] }}
