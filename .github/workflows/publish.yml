@@ -3,7 +3,7 @@ name: Node.js Package Lint, Test and Publish
 on:
   push:
     branches:
-      - "master"
+      - 'master'
 
 jobs:
   lint-and-test:
@@ -19,7 +19,6 @@ jobs:
       - run: yarn lint
       - run: yarn test
 
-  # Publishing to gpr automatically published to npm too
   build-and-publish-gpr:
     needs: lint-and-test
     runs-on: ubuntu-latest
@@ -38,7 +37,7 @@ jobs:
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
           GH_TOKEN: ${{secrets.GH_TOKEN}}
           CI: true
-  #  Uncomment this for a direct publish to npm
+
   build-and-publish-npm:
     needs: build-and-publish-gpr
     runs-on: ubuntu-latest
