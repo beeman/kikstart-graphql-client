@@ -21,11 +21,27 @@ export class GraphQLClient {
   public wsLink: WebSocketLink;
 
   constructor(public config: KikstartGraphQLClientConfig) {
-    this.httpLink = createHttpLink({ uri: config.uri, fetch });
+    if (config.uri) {
+      console.warn('Deprecated config parameter: uri, please use url instead.');
+      config.url = config.uri;
+    }
+    if (config.wsUri) {
+      console.warn(
+        'Deprecated config parameter: wsUri, please use wsUrl instead.',
+      );
+      config.wsUrl = config.wsUri;
+    }
+    config.wsUrl =
+      config.wsUrl ||
+      config.url.replace('https://', 'wss://').replace('http://', 'ws://');
+    this.httpLink = createHttpLink({ uri: config.url, fetch });
     this.wsClient = new SubscriptionClient(
-      config.wsUri,
+      config.wsUrl,
       {
         ...config.wsOptions,
+        connectionParams: {
+          headers: config.headers || {},
+        },
         reconnect: true,
       },
       ws,
@@ -56,7 +72,7 @@ export class GraphQLClient {
   public disconnect() {
     if (this.config.log) {
       this.config.log.log(
-        `[GraphQLClient] Disconnecting from ${this.config.uri} / ${this.config.wsUri}`,
+        `[GraphQLClient] Disconnecting from ${this.config.url} / ${this.config.wsUrl}`,
       );
     }
 

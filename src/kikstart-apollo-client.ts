@@ -1,5 +1,4 @@
 // Based on code from https://github.com/graphql-in-depth/graphcurl
-import { inspect } from 'util';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
@@ -7,32 +6,21 @@ import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { getMainDefinition } from 'apollo-utilities';
 
-/* istanbul ignore next */
-const getErrorMessage = ({ graphQLErrors, networkError, operation }) =>
-  `GraphQL Error${
-    networkError && networkError.statusCode
-      ? ` (${networkError.statusCode}): `
-      : ': '
-  }${networkError && networkError.message.replace(/\.$/, '')}${
-    graphQLErrors && graphQLErrors.length
-      ? `:\n${graphQLErrors.map(({ message }) => message).join('\n')}`
-      : ''
-  }${operation ? `\n@ ${operation.operationName}` : ''}${
-    operation && operation.variables ? `(${inspect(operation.variables)})` : ''
-  }`;
-
 export interface KikstartGraphQLLinkConfig {
   mutationLink?: 'http' | 'ws';
   queryLink?: 'http' | 'ws';
   subscriptionLink?: 'ws';
 }
 export interface KikstartGraphQLClientConfig extends KikstartGraphQLLinkConfig {
-  uri: string;
-  wsUri: string;
+  url: string;
+  wsUrl?: string;
   wsOptions?: any;
   cache?: any;
   headers?: any;
   log?: any;
+  // DEPRECATED to be removed in an upcoming major release
+  uri?: string;
+  wsUri?: string;
 }
 
 export const createLink = (
@@ -72,8 +60,8 @@ export const createClient = (
   httpLink,
   wsLink,
   {
-    uri,
-    wsUri,
+    url,
+    wsUrl,
     mutationLink = 'http',
     queryLink = 'http',
     subscriptionLink = 'ws',
@@ -90,7 +78,7 @@ export const createClient = (
 
   // Compose links
   const link = ApolloLink.from([
-    onError((error: any) => (log || console).error(getErrorMessage(error))),
+    onError((error: any) => (log || console).error(error)),
     ...(headers && Object.keys(headers).length
       ? [
           setContext((_request, context) => ({
@@ -103,7 +91,7 @@ export const createClient = (
 
   if (log)
     log.log(
-      `[GraphQLClient] Connecting to ${uri} / ${wsUri}`,
+      `[GraphQLClient] Connecting to ${url} / ${wsUrl}`,
       ...(headers && Object.keys(headers).length ? [headers] : []),
     );
 

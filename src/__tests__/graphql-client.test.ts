@@ -1,10 +1,10 @@
 import { GraphQLClient, KikstartGraphQLClientConfig } from '..';
-const uri = 'http://localhost:4567';
-const wsUri = 'ws://localhost:4567';
+const url = 'http://localhost:4567';
+const wsUrl = 'ws://localhost:4567';
 
 const queries = {
   uptimeQuery: `
-    query { uptime } 
+    query { uptime }
   `,
   publishMutation: `
     mutation {
@@ -28,8 +28,8 @@ const queries = {
 
 const getClient = (config?: KikstartGraphQLClientConfig) => {
   return new GraphQLClient({
-    uri,
-    wsUri,
+    url,
+    wsUrl,
     ...config,
   });
 };
@@ -66,8 +66,8 @@ test('GraphQLClient subscription', async () => {
 
 test('GraphQLClient all transport over webSocket', async () => {
   const client = getClient({
-    uri,
-    wsUri,
+    url,
+    wsUrl,
     queryLink: 'ws',
     mutationLink: 'ws',
   });
