@@ -17,6 +17,7 @@ export interface KikstartGraphQLClientConfig extends KikstartGraphQLLinkConfig {
   wsOptions?: any;
   cache?: any;
   headers?: any;
+  connectionParams?: any;
   log?: any;
   // DEPRECATED to be removed in an upcoming major release
   uri?: string;
