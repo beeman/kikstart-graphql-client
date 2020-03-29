@@ -51,7 +51,7 @@
     "graphql": "14.6.0",
     "graphql-yoga": "1.18.3",
     "husky": "4.2.3",
-    "jest": "25.2.3",
+    "jest": "25.2.4",
     "nodemon": "2.0.2",
     "prettier": "2.0.2",
     "semantic-release": "17.0.4",
