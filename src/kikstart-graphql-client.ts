@@ -39,7 +39,9 @@ export class GraphQLClient {
       config.wsUrl,
       {
         ...config.wsOptions,
-        connectionParams: config.connectionParams,
+        connectionParams: config.connectionParams
+          ? config.connectionParams
+          : { headers: config.headers || {} },
         reconnect: true,
       },
       ws,
