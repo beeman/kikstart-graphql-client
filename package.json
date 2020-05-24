@@ -54,7 +54,7 @@
     "jest": "26.0.1",
     "nodemon": "2.0.4",
     "prettier": "2.0.5",
-    "semantic-release": "17.0.7",
+    "semantic-release": "17.0.8",
     "ts-jest": "26.0.0",
     "typescript": "3.9.3"
   },
